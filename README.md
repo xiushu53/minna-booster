@@ -19,13 +19,19 @@
 | :--- | :--- | :--- |
 | **フレームワーク** | [Next.js](https://nextjs.org/) 15 (App Router) | アプリケーションの基本骨格、UI構築 |
 | **UIコンポーネント** | [shadcn/ui](https://ui.shadcn.com/) | 高品質でカスタマイズ性の高いUIコンポーネント群 |
+| **スタイリング** | [Tailwind CSS](https://tailwindcss.com/) v3 | ユーティリティファーストのCSSフレームワーク |
 | **アニメーション** | [Framer Motion](https://www.framer.com/motion/) | インタラクティブなアニメーション |
 | **エフェクト** | [react-canvas-confetti](https://github.com/catdad/canvas-confetti) | お祝いの紙吹雪エフェクト |
-| **リアルタイム通信** | [Pusher](https://pusher.com/) | リアルタイムな双方向通信 |
+| **リアルタイム通信** | [Pusher](https://pusher.com/) | リアルタイムな双方向通信（WebSocket） |
 | **ホスティング** | [Vercel](https://vercel.com/) | デプロイとホスティング |
 | **パッケージ管理** | [pnpm](https://pnpm.io/) | パッケージマネージャー |
 | **コード品質** | [Biome](https://biomejs.dev/) | リンター、フォーマッター、その他ツールチェイン |
 | **実行環境** | [Turbopack](https://turbo.build/pack) | Next.js用の高速な開発サーバー |
+
+## 外部サービス・API
+
+本プロジェクトは、リアルタイム通信機能を実現するために外部APIとして **[Pusher](https://pusher.com/)** を利用しています。
+利用にはPusherのアカウント登録と、取得したAPIキーを`.env.local`ファイルに設定する必要があります。
 
 ## ディレクトリ構成
 
@@ -56,9 +62,20 @@
    ```
 
 2. **環境変数の設定:**
-   プロジェクトルートに`.env.local`ファイルを作成し、Pusherなどの外部サービスのAPIキーを設定します。
+   プロジェクトルートにある `.env.example` ファイルをコピーして `.env.local` ファイルを作成し、PusherのAPIキーなどを設定します。
+   ```bash
+   cp .env.example .env.local
    ```
-   # .env.local.example
+   `.env.local` に以下の値を設定してください。
+   ```
+   # .env.local
+   # Pusher Credentials (for server-side)
+   PUSHER_APP_ID="..."
+   PUSHER_KEY="..."
+   PUSHER_SECRET="..."
+   PUSHER_CLUSTER="..."
+
+   # Public key for the client-side
    NEXT_PUBLIC_PUSHER_KEY="..."
    NEXT_PUBLIC_PUSHER_CLUSTER="..."
    ```
