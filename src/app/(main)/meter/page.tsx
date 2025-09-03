@@ -1,21 +1,37 @@
-"use client"; // インタラクティブな機能を扱うためクライアントコンポーネントとします
+"use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CelebrationEffect } from "@/_components/features/meter/CelebrationEffect";
 import { CountDisplay } from "@/_components/features/meter/CountDisplay";
 import { MeterDisplay } from "@/_components/features/meter/MeterDisplay";
-import { Button } from "@/_components/ui/button"; // shadcn/uiのButtonを使います
+import { Button } from "@/_components/ui/button";
+import { usePusher } from "@/_hooks/shared/usePusher"; // 作成したフックをインポート
 
-// ゴールのカウント数
 const GOAL_COUNT = 50;
 
 export default function MeterPage() {
-  // UI確認のため、useStateで仮のカウントを管理します
-  const [count, setCount] = useState(25);
+  // ▼▼▼ 初期値を25から0に変更します ▼▼▼
+  const [count, setCount] = useState(0);
   const isGoal = count >= GOAL_COUNT;
 
-  const handleReset = () => {
-    setCount(0);
+  // ▼▼▼ Pusherから通知が来たときに実行する関数を定義します ▼▼▼
+  // useCallbackで関数をメモ化し、usePusherフックでの不要な再実行を防ぎます
+  const handleCountUpdate = useCallback((data: { count: number }) => {
+    // 新しいカウント数で画面の状態を更新
+    setCount(data.count);
+  }, []); // この関数自体は再生成される必要がないので依存配列は空
+
+  // ▼▼▼ usePusherフックを呼び出して、Pusherからの通知を待ち受けます ▼▼▼
+  usePusher("minnabooster-channel", "count-update", handleCountUpdate);
+
+  // ▼▼▼ リセットボタンの処理を、APIを呼び出す非同期関数に変更します ▼▼▼
+  const handleReset = async () => {
+    try {
+      // リセット用のAPIを叩く
+      await fetch("/api/reset", { method: "POST" });
+    } catch (error) {
+      console.error("Reset failed:", error);
+    }
   };
 
   return (
@@ -24,14 +40,12 @@ export default function MeterPage() {
       style={{ backgroundColor: "var(--minna-background)" }}
     >
       <div className="relative w-full max-w-5xl">
-        {/* isGoalがtrueの時にお祝い画面を表示 */}
         {isGoal && <CelebrationEffect />}
 
-        {/* isGoalがfalseの時にメーター画面を表示 */}
         <div
           className={`grid grid-cols-1 items-center gap-8 md:grid-cols-2 ${
-            isGoal ? "invisible" : ""
-          }`}
+            isGoal ? "invisible opacity-0" : "visible opacity-100"
+          } transition-all duration-500`}
         >
           <MeterDisplay count={count} goal={GOAL_COUNT} />
           <CountDisplay count={count} />
