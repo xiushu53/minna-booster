@@ -1,23 +1,24 @@
-// サーバーのメモリ上でカウントを管理するシンプルなストア
-// (DBを使わない小規模なデモ用途)
+import { kv } from "@vercel/kv";
 
-let count = 0;
 const GOAL = 50;
 
-export const getCount = () => count;
+// 現在のカウントをKVから取得する
+export const getCount = async () => {
+  const count = await kv.get<number>("count");
+  return count ?? 0;
+};
 
-export const incrementCount = () => {
-  // ゴールに達していなければカウントを1増やす
-  if (count < GOAL) {
-    count++;
-  }
+// KVのカウントを1増やす (アトミック操作なので安全)
+export const incrementCount = async () => {
+  const newCount = await kv.incr("count");
   return {
-    currentCount: count,
-    goalReached: count >= GOAL,
+    currentCount: newCount,
+    goalReached: newCount >= GOAL,
   };
 };
 
-export const resetCount = () => {
-  count = 0;
-  return count;
+// KVのカウントを0にリセットする
+export const resetCount = async () => {
+  await kv.set("count", 0);
+  return 0;
 };

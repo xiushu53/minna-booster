@@ -4,10 +4,9 @@ import { resetCount } from "@/lib/server/store";
 
 export async function POST() {
   try {
-    // サーバー上のカウントを0に戻す
-    const newCount = resetCount();
+    // サーバー上のカウントを0に戻す (非同期に)
+    const newCount = await resetCount(); // 👈 awaitを追加
 
-    // リセットされたことを全クライアントに通知
     await pusherServer.trigger("minnabooster-channel", "count-update", {
       count: newCount,
     });
