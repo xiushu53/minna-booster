@@ -37,7 +37,7 @@ export function CelebrationEffect() {
 
   return (
     <div className="absolute inset-0 flex items-center justify-center">
-      <p className="celebration-text">酷暑！</p>
+      <p className="celebration-text">熱い！</p>
     </div>
   );
 }

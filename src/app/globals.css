@@ -62,8 +62,9 @@
 /* ▼▼▼ MinnaBooster Custom Styles ▼▼▼ */
 .meter {
   position: relative;
-  width: 300px;
-  height: 300px;
+  /* メーターのサイズを300pxから450pxに拡大 */
+  width: 450px;
+  height: 450px;
 }
 .meter-segment {
   position: absolute;
