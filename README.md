@@ -22,6 +22,7 @@
 | **スタイリング** | [Tailwind CSS](https://tailwindcss.com/) v3 | ユーティリティファーストのCSSフレームワーク |
 | **アニメーション** | [Framer Motion](https://www.framer.com/motion/) | インタラクティブなアニメーション |
 | **エフェクト** | [react-canvas-confetti](https://github.com/catdad/canvas-confetti) | お祝いの紙吹雪エフェクト |
+| **データストア** | [Vercel KV](https://vercel.com/docs/storage/vercel-kv) | サーバーレスなRedis互換のKey-Valueストア |
 | **リアルタイム通信** | [Pusher](https://pusher.com/) | リアルタイムな双方向通信（WebSocket） |
 | **ホスティング** | [Vercel](https://vercel.com/) | デプロイとホスティング |
 | **パッケージ管理** | [pnpm](https://pnpm.io/) | パッケージマネージャー |
@@ -30,8 +31,11 @@
 
 ## 外部サービス・API
 
-本プロジェクトは、リアルタイム通信機能を実現するために外部APIとして **[Pusher](https://pusher.com/)** を利用しています。
-利用にはPusherのアカウント登録と、取得したAPIキーを`.env.local`ファイルに設定する必要があります。
+本プロジェクトは、以下の外部サービスを利用しています。
+利用には各サービスのアカウント登録と、取得したAPIキーなどを`.env.local`ファイルに設定する必要があります。
+
+- **[Pusher](https://pusher.com/)**: リアルタイム通信機能（WebSocket）のために利用します。
+- **[Vercel KV](https://vercel.com/docs/storage/vercel-kv)**: アプリケーションの状態（カウンターの値など）を永続化するために利用します。Vercel KVは、Vercelプロジェクトと連携して作成されるサーバーレスなRedisデータベースです。
 
 ## ディレクトリ構成
 
@@ -69,15 +73,21 @@
    `.env.local` に以下の値を設定してください。
    ```
    # .env.local
-   # Pusher Credentials (for server-side)
+   # Pusher Credentials
    PUSHER_APP_ID="..."
    PUSHER_KEY="..."
    PUSHER_SECRET="..."
    PUSHER_CLUSTER="..."
 
-   # Public key for the client-side
+   # Pusher (Public key for the client-side)
    NEXT_PUBLIC_PUSHER_KEY="..."
    NEXT_PUBLIC_PUSHER_CLUSTER="..."
+
+   # Vercel KV (for data persistence)
+   KV_URL="..."
+   KV_REST_API_URL="..."
+   KV_REST_API_TOKEN="..."
+   KV_REST_API_READ_ONLY_TOKEN="..."
    ```
 
 3. **開発サーバーの起動:**
